@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import models
+from ..config import settings
 
 # OAuth2 scheme for dependency injection (tokenUrl should match your token endpoint)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
@@ -16,9 +17,9 @@ router = APIRouter(
 )
 
 # Secret key for signing tokens — replace with a secure value and/or load from an environment variable in production
-SECRET_KEY = "b7fc4838f5a36c8d1940b56fe2df734293434da17cca35a4e3f82d66ead6aa0d"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:

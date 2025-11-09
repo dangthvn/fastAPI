@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, conint
+from typing import Annotated
 from datetime import datetime
 class PostBase(BaseModel):
     title: str
@@ -22,6 +23,12 @@ class Post(PostBase):
     class Config:
         from_attributes = True
 
+class PostOut(BaseModel):
+    Post: Post
+    Votes: int
+    class Config:
+        from_attributes = True
+
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -37,3 +44,6 @@ class Token(BaseModel):
     token_type: str
 class TokenData(BaseModel):
     id: str | None = None
+class Vote(BaseModel):
+    post_id: int
+    dir: Annotated[int, conint(le=1)]  # 1 for upvote, 0 for remove vote
